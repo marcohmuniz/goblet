@@ -68,16 +68,24 @@ function displayResponse(data) {
     }
 
     let inventory = {};
+    let opponentInventory = {};
     if(login === data.whitePlayer.login){
         inventory = data.whiteInventory;
+        opponentInventory = data.blackInventory;
     } else {
         inventory = data.blackInventory;
+        opponentInventory = data.whiteInventory;
     }
 
     for(let i = 0; i < inventory.length; i++){
         let id = "inv_" + i;
+        let opponentId = "oinv_" + i
+
         let currPosition = inventory[i];
+        let opponentCurrPosition = opponentInventory[i];
+
         updatePosition(id, currPosition);
+        updatePosition(opponentId, opponentCurrPosition);
     }
 }
 
@@ -108,18 +116,27 @@ function gameOverMessage(data){
 function initializeInventory(data){
     console.log("In initialzie");
     let startingCupClass = "cupSize3"
+    let opponentCupColorClass = "";
+    let cupColorClass = "";
     if(login === data.whitePlayer.login){
-        cupColorClass = "cupColorWhite"
+        cupColorClass = "cupColorWhite";
+        opponentCupColorClass = "cupColorBlack";
     } else {
-        cupColorClass = "cupColorBlack"
+        cupColorClass = "cupColorBlack";
+        opponentCupColorClass = "cupColorWhite";
     }
 
     for(let i = 0; i < 3; i++){
         let id = "inv_" + i;
+        let opponentId = "oinv_" + i;
         let cup = $("#" + id).children("div").eq(0);
+        let opponentCup = $("#" + opponentId).children("div").eq(0);
         cup.removeClass();
         cup.addClass(cupColorClass);
         cup.addClass(startingCupClass);
+        opponentCup.removeClass();
+        opponentCup.addClass(opponentCupColorClass);
+        opponentCup.addClass(startingCupClass);
         }
 }
 //first click is start, second is end
@@ -159,12 +176,12 @@ $(".inv").click(function () {
         currWhichStack = $(this);
     } else {
         if($(this).attr('id') === currWhichStack.attr('id')){
-            var thisColor = $(this).hasClass("selected") ? "#b18d50" : "#ffffffa8";
+            var thisColor = $(this).hasClass("selected") ? "#b18d50" :  emptyColor;
             $(this).css("background-color", thisColor);
             currWhichStack = $(this).hasClass("selected") ? $(this) : null;
         } else {
             $(this).css("background-color", "#b18d50");
-            currWhichStack.css("background-color", "#ffffffa8");
+            currWhichStack.css("background-color",  emptyColor);
             currWhichStack.toggleClass("selected");
             currWhichStack = $(this);
         }

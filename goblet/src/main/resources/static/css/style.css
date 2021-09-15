@@ -19,7 +19,7 @@ h1{
   text-align: center;
 }
 
-#otherBox{
+.otherBox{
   width: 350px;
   overflow: auto;
   margin: 40px auto;
@@ -27,7 +27,6 @@ h1{
   border-radius: 10px;
 }
 #message{
-  background: #333;
   color: #fff;
 }
 #gameBoard li{
@@ -46,7 +45,7 @@ h1{
   cursor: pointer;
   background: #b18d50;
 }
-#inventory li{
+.inventory li{
   float: left;
   margin: 10px;
   height: 70px;
@@ -59,9 +58,18 @@ h1{
   border-radius: 5px;
 }
 
-#inventory li:hover {
+.inventory li:hover {
   cursor: pointer;
   background: #b18d50;
+}
+
+#opponentInventory {
+    position:relative; left:22em; top:-32.5em;
+    -webkit-transform: rotate(90deg); /* Safari and Chrome */
+    -moz-transform: rotate(90deg);   /* Firefox */
+    -ms-transform: rotate(90deg);   /* IE 9 */
+    -o-transform: rotate(90deg);   /* Opera */
+    transform: rotate(90deg);
 }
 
 footer{
