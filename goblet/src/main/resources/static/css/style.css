@@ -1,0 +1,109 @@
+body{
+  background: #0;
+  color: #666;
+}
+h1{
+  text-align: center;
+  color: #fff;
+}
+.clearfix{
+  clear: both;
+}
+#box{
+  width: 450px;
+  overflow: auto;
+  margin: 40px auto;
+  background: #9a7e4a;
+  padding-bottom: 40px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#otherBox{
+  width: 350px;
+  overflow: auto;
+  margin: 40px auto;
+  background: #9a7e4a;
+  border-radius: 10px;
+}
+#message{
+  background: #333;
+  color: #fff;
+}
+#gameBoard li{
+  float: left;
+  margin: 10px;
+  height: 70px;
+  width: 70px;
+  font-size: 25px;
+  background: #e8e2cda8;
+  color: #000000;
+  list-style: none;
+  text-align: center;
+  border-radius: 5px;
+}
+#gameBoard li:hover {
+  cursor: pointer;
+  background: #b18d50;
+}
+#inventory li{
+  float: left;
+  margin: 10px;
+  height: 70px;
+  width: 70px;
+  font-size: 25px;
+  background: #e8e2cda8;
+  color: #000000;
+  list-style: none;
+  text-align: center;
+  border-radius: 5px;
+}
+
+#inventory li:hover {
+  cursor: pointer;
+  background: #b18d50;
+}
+
+footer{
+  display: block;
+  text-align: center;
+  padding-top: 20px;
+  color: #ffffff;
+}
+
+.cupSize3 {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+}
+.cupSize2 {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8%;
+    width: 50px;
+    height: 80%;
+    width: 80%;
+    border-radius: 5px;
+}
+.cupSize1 {
+    display: inline-block;
+    margin-top: 22%;
+    height: 55%;
+    width: 55%;
+    border-radius: 5px;
+}
+.cupSize0 {
+    background: #ffffff;
+    display: inline-block;
+    margin-top: 33%;
+    height: 30%;
+    width: 30%;
+    border-radius: 5px;
+}
+
+.cupColorWhite {
+    background: #ffffff;
+}
+.cupColorBlack {
+    background: #060606;
+}
