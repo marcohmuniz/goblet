@@ -19,6 +19,7 @@ public class Game {
 
     private boolean isWhiteMove;
     private Player winner;
+    private String message;
 
     public Game(){
         isWhiteMove = true;
@@ -74,6 +75,10 @@ public class Game {
         return gameId;
     }
 
+    public String getMessage(){
+        return message;
+    }
+
     public void initializeBoard(){
         for(int i = 0; i < BOARD_SIZE; i++){
             board.add(new ArrayList<Stack<Cup>>());
@@ -114,34 +119,16 @@ public class Game {
 
     //see later if you can turn print statement into throws going into a try catch in Goblet
     public boolean makeMove(int[] start, int[] end, int whichStack){
-        if(whichStack > NUM_STACKSs - 1 || whichStack < -1){
-            System.out.println("Choose from stack");
-            return false;
-        }
         boolean isFromInventory = (whichStack != -1);
 
-        //always check the end location regardless of whether the move
-        //comes from inventory
-        if(!withinBounds(end)){
-            System.out.println("Choose a legal move.");
-        }
-        //if the move is not from inventory check the bounds of start, that you move the cup somewhere
-        //that there is a piece there that is yours
         if(!isFromInventory){
-            if(!withinBounds(start)){
-                System.out.println("Choose a legal move.");
-                return false;
-            }
-            if(start[0] == end[0] && start[1] == end[1]){
-                System.out.println("Not valid move.");
-                return false;
-            }
+
             if(board.get(start[0]).get(start[1]).empty()){
-                System.out.println("There is no piece there");
+                message = "You don't have a piece there.";
                 return false;
             }
-            if(board.get(start[0]).get(start[1]).peek().getCupColor() != isWhiteMove){
-                System.out.println("Not your piece!");
+            if(isOpponentCup(start)){
+                message = "That is not your piece.";
                 return false;
             }
         }
@@ -151,7 +138,7 @@ public class Game {
             startCup = getFromInventory(whichStack);
             //if there is no cup in your inventory return
             if(startCup == null){
-                System.out.println("Sorry, you don't have anymore of those cups");
+                message = "Sorry, you don't have anymore cups in that stack.";
                 return false;
             }
         } else {
@@ -159,9 +146,17 @@ public class Game {
         }
         //if the place you're placing your cup is not empty and/or has a bigger cup than you return
         if(!(board.get(end[0]).get(end[1]).empty()) && !(startCup.isBiggerThan(board.get(end[0]).get(end[1]).peek()))){
-            System.out.println("That cup is bigger than yours!");
+            message = "That cup is bigger than yours!";
             return false;
         }
+
+        if(isFromInventory && !(board.get(end[0]).get(end[1]).empty()) && isOpponentCup(end) && !hasOpponentThreeRow(end)){
+            message = "Cannot play from inventory on top of opponent piece if opponent does not have three in a row";
+            return false;
+        }
+
+        //need to check that you're placing from inventory onto an opponents cup, not legal unless there are three in a row
+
         //established the end location either is empty or has a smaller cup, so make your move
         board.get(end[0]).get(end[1]).push(startCup);
 
@@ -173,7 +168,79 @@ public class Game {
             board.get(start[0]).get(start[1]).pop();
         }
         isWhiteMove = !isWhiteMove;
+        message = "";
         return true;
+    }
+
+    private boolean isOpponentCup(int[] move){
+        return board.get(move[0]).get(move[1]).peek().getCupColor() != isWhiteMove;
+    }
+
+    //the opponent has three in a row including the end location
+
+    //lmao doesn't work for W W1 W where W1 is the piece being covered
+    private boolean hasOpponentThreeRow(int[] end){
+        int numConnected = 0;
+        for( Stack<Cup> cell : board.get(end[0])){
+            if(!cell.empty() && cell.peek().getCupColor() != isWhiteMove){
+                numConnected++;
+            } else {
+                numConnected = 0;
+            }
+            if(numConnected == 3){
+                return true;
+            }
+        }
+
+        int colIndex = end[1];
+        numConnected = 0;
+        for(ArrayList<Stack<Cup>> row : board){
+            if(!row.get(colIndex).empty() && row.get(colIndex).peek().getCupColor() != isWhiteMove) {
+                numConnected++;
+            } else {
+                numConnected = 0;
+            }
+            if(numConnected == 3){
+                return true;
+            }
+        }
+
+        //check if on a diagonal otherwise return
+        if (Math.abs(end[0]) != Math.abs(end[1])) {
+            return false;
+        }
+
+        int i = 0;
+        for(ArrayList<Stack<Cup>> row : board){
+            if(!row.get(i).empty() && row.get(i).peek().getCupColor() != isWhiteMove){
+                numConnected++;
+            } else {
+                numConnected = 0;
+            }
+            if(numConnected == 3){
+                return true;
+            }
+            i++;
+        }
+
+        i = 3;
+        for(ArrayList<Stack<Cup>> row : board){
+            if(!row.get(i).empty() && row.get(i).peek().getCupColor() != isWhiteMove){
+                numConnected++;
+            } else {
+                numConnected = 0;
+            }
+            if(numConnected == 3){
+                return true;
+            }
+            i--;
+        }
+        return false;
+    }
+
+
+    private boolean isEmptySpace(int[] move){
+        return board.get(move[0]).get(move[1]).empty();
     }
 
     //find any four in a row, a player can lose on their turn. No mercy!
