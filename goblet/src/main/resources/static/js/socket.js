@@ -2,6 +2,7 @@ const url = 'http://localhost:8080';
 let stompClient;
 var gameId;
 var login;
+var isWhitePlayer;
 
 function connectToSocket(gameId) {
     console.log("connecting to the game");
@@ -33,6 +34,7 @@ function create_game() {
                 gameId = data.gameId;
                 connectToSocket(gameId);
                 alert("Your created a game. Game id is: " + data.gameId);
+                isWhitePlayer= true;
                 gameOn = true;
                 console.log("Did this work?");
                 initializeInventory(data);
@@ -62,6 +64,7 @@ function connectToRandom() {
                 console.log("this should print");
                 alert("Congrats you're playing with: " + data.whitePlayer.login);
                 gameId = data.gameId;
+                isWhitePlayer= false;
                 console.log("Game ID: " + gameId);
                 connectToSocket(gameId);
                 gameOn = true;
@@ -100,6 +103,7 @@ function connectToSpecificGame() {
                 console.log("Game ID: " + gameId);
                 connectToSocket(gameId);
                 gameOn = true;
+                isWhitePlayer= false;
                 initializeInventory(data);
                 console.log("Did this work?");
             },

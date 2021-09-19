@@ -52,7 +52,30 @@ function makeAMove(start, end, whichStack) {
     })
 }
 
+//the problem is that the error message gets sent to both players and I need a way of determining if it's a message determined for me.
+//Would it be easier to just keep track of which player I am and then I can just check if I made the previous move??????
+
+//couple different scenarious
+//1. It's my turn because I made a move that was illegal and need to see the error message, this can happen many different times in a row
+//2. It's my turn because my opponent made a move
+
+//if message is empty I will assume the other player just made their move
+//determine if it's my turn or not
+
+//My turn
+//my error
+
+//opponent turn
+// opponent error
+
+
 function displayResponse(data) {
+    if(isWhitePlayer){
+        displayMessage(data.whiteErrorMessage);
+    } else {
+        displayMessage(data.blackErrorMessage);
+    }
+
     if(data.status === "FINISHED"){
         gameOverMessage(data);
     }
@@ -89,6 +112,10 @@ function displayResponse(data) {
     }
 }
 
+function displayMessage(message){
+    $("#message").text(message);
+}
+
 function updatePosition(id, position){
     let cup = $("#" + id).children("div").eq(0);
     cup.removeClass();
@@ -114,11 +141,10 @@ function gameOverMessage(data){
 }
 
 function initializeInventory(data){
-    console.log("In initialzie");
     let startingCupClass = "cupSize3"
     let opponentCupColorClass = "";
     let cupColorClass = "";
-    if(login === data.whitePlayer.login){
+    if(isWhitePlayer){
         cupColorClass = "cupColorWhite";
         opponentCupColorClass = "cupColorBlack";
     } else {
