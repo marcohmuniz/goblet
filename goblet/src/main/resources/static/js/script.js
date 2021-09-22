@@ -1,6 +1,7 @@
 /*
 TODO
-Make it so the style of the position gets set to nothing as opposed to the "proper" background color
+1. Highlight last played move, maybe with green.
+2. Move on and come back in like a month to refactor
 */
 
 
@@ -9,6 +10,7 @@ var currStart = null;
 var currEnd = null;
 var currWhichStack = null;
 var emptyColor = "#e8e2cda8";
+var selectedColor = "#b18d50";
 
 //add some user side move checking here
 function playerTurn() {
@@ -23,7 +25,7 @@ function playerTurn() {
             let end = currEnd.attr('id').split('_').map(Number);;
             makeAMove(start, end, -1);
         }
-            clearMoveSelectors();
+        clearMoveSelectors();
     }
 }
 
@@ -51,23 +53,6 @@ function makeAMove(start, end, whichStack) {
         }
     })
 }
-
-//the problem is that the error message gets sent to both players and I need a way of determining if it's a message determined for me.
-//Would it be easier to just keep track of which player I am and then I can just check if I made the previous move??????
-
-//couple different scenarious
-//1. It's my turn because I made a move that was illegal and need to see the error message, this can happen many different times in a row
-//2. It's my turn because my opponent made a move
-
-//if message is empty I will assume the other player just made their move
-//determine if it's my turn or not
-
-//My turn
-//my error
-
-//opponent turn
-// opponent error
-
 
 function displayResponse(data) {
     if(isWhitePlayer){
@@ -170,25 +155,30 @@ function initializeInventory(data){
 $(".cup").click(function () {
     if(currStart == null){
         $(this).addClass("selected");
-        $(this).css("background-color", "#b18d50");
+        $(this).css("background-color", selectedColor);
         currStart = $(this);
         if(currWhichStack !== null){
             playerTurn();
         }                                 
     } else if(currEnd == null){
-        if($(this).attr('id') === currStart.attr('id')) return;
-        $(this).addClass("selected");
-        $(this).css("background-color", "#b18d50");
-        currEnd = $(this);
-        if(currWhichStack === null){
-            playerTurn();
+        if($(this).attr('id') === currStart.attr('id')){
+           currStart.removeClass("selected");
+           currStart.removeAttr("style");
+           currStart = null;
+        } else {
+            $(this).addClass("selected");
+            $(this).css("background-color", selectedColor);
+            currEnd = $(this);
+            if(currWhichStack === null){
+                playerTurn();
+            }
         }
     } else {
         currStart.removeClass("selected");
-        currStart.css("background-color", emptyColor);
+        currStart.removeAttr("style");
         currStart = null;
         currEnd.removeClass("selected");
-        currEnd.css("background-color", emptyColor);
+        currEnd.removeAttr("style");
         currEnd = null;
     }
 });
@@ -198,16 +188,20 @@ $(".cup").click(function () {
 $(".inv").click(function () {
     $(this).toggleClass("selected");
     if(currWhichStack === null){
-        $(this).css("background-color", "#b18d50");
+        $(this).css("background-color", selectedColor);
         currWhichStack = $(this);
     } else {
         if($(this).attr('id') === currWhichStack.attr('id')){
-            var thisColor = $(this).hasClass("selected") ? "#b18d50" :  emptyColor;
-            $(this).css("background-color", thisColor);
-            currWhichStack = $(this).hasClass("selected") ? $(this) : null;
+            if($(this).hasClass("selected")){
+                $(this).css("background-color", thisColor);
+                currWhichStack = $(this);
+            } else {
+                $(this).removeAttr("style");
+                currWhichStack = null;
+            }
         } else {
-            $(this).css("background-color", "#b18d50");
-            currWhichStack.css("background-color",  emptyColor);
+            $(this).css("background-color", selectedColor);
+            currWhichStack.removeAttr("style");
             currWhichStack.toggleClass("selected");
             currWhichStack = $(this);
         }
@@ -217,19 +211,19 @@ $(".inv").click(function () {
 function clearMoveSelectors(){
     if(currStart !== null){
         currStart.removeClass("selected");
-        currStart.css("background-color", emptyColor);
+        currStart.removeAttr("style");
         currStart = null;
     }
 
     if(currEnd !== null){
         currEnd.removeClass("selected");
-        currEnd.css("background-color", emptyColor);
+        currEnd.removeAttr("style");
         currEnd = null;
     }
 
     if(currWhichStack !== null){
         currWhichStack.removeClass("selected");
-        currWhichStack.css("background-color", emptyColor);
+        currWhichStack.removeAttr("style");
         currWhichStack = null;
     }
 }

@@ -36,7 +36,6 @@ function create_game() {
                 alert("Your created a game. Game id is: " + data.gameId);
                 isWhitePlayer= true;
                 gameOn = true;
-                console.log("Did this work?");
                 initializeInventory(data);
             },
             error: function (error) {
